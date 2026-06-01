@@ -1,121 +1,177 @@
 # Network Intrusion Detection System (NIDS)
 
-## Overview
-
-The **Network Intrusion Detection System (NIDS)** is a cybersecurity project designed to identify and classify malicious network activities using Machine Learning techniques. The system analyzes network traffic data, extracts relevant features, and predicts whether a network connection is normal or represents a potential attack.
-
-This project demonstrates the application of data science and machine learning in network security by detecting various intrusion attempts and helping administrators respond to threats efficiently.
-
----
+A Machine Learning-powered Network Intrusion Detection System that monitors network traffic in real time, classifies malicious activities, and provides an interactive dashboard for attack visualization and system monitoring.
 
 ## Features
 
-* Network traffic analysis
-* Data preprocessing and feature engineering
-* Machine Learning-based attack detection
-* Classification of normal and malicious traffic
-* Performance evaluation using multiple metrics
-* Visualization of results and attack patterns
-* Easy-to-extend architecture for new datasets and models
+### Real-Time Network Monitoring
+
+* Captures live network packets using Scapy.
+* Extracts network traffic features automatically.
+* Continuously analyzes incoming traffic.
+
+### Intrusion Detection
+
+Detects the following traffic categories:
+
+| Class  | Description                               |
+| ------ | ----------------------------------------- |
+| Normal | Legitimate network traffic                |
+| DoS    | Denial of Service attacks                 |
+| Probe  | Network scanning and reconnaissance       |
+| R2L    | Remote-to-Local attacks                   |
+| U2R    | User-to-Root privilege escalation attacks |
+
+### Machine Learning Models
+
+The system compares predictions from:
+
+* Random Forest Classifier
+* Linear Support Vector Machine (SVM)
+
+### Dashboard Analytics
+
+* Daily attack statistics
+* Attack category distribution
+* Historical activity tracking
+* Network activity visualization
+
+### Attack Simulation
+
+* Generate test attack scenarios
+* Compare Random Forest and SVM predictions
+* View prediction probabilities
+
+### System Monitoring
+
+* CPU utilization
+* Memory utilization
+* Network traffic statistics
 
 ---
 
-## Project Structure
+# Project Architecture
 
 ```text
-Network-Intrusion-Detection-System/
-│
-├── data/                     # Dataset files
-├── notebooks/                # Jupyter notebooks
-├── models/                   # Trained models
-├── src/                      # Source code
-│   ├── preprocessing.py
-│   ├── training.py
-│   ├── prediction.py
-│   └── utils.py
-│
-├── results/                  # Evaluation results
-├── requirements.txt
-├── README.md
-└── main.py
+┌──────────────────────┐
+│ React Frontend       │
+│ (Vite + Dashboard)   │
+└──────────┬───────────┘
+           │ REST API
+           ▼
+┌──────────────────────┐
+│ FastAPI Backend      │
+└──────────┬───────────┘
+           │
+ ┌─────────┼─────────┐
+ │         │         │
+ ▼         ▼         ▼
+Scapy   ML Models  MongoDB
+Packet  RF + SVM   Activity Logs
+Sniffer
 ```
 
 ---
 
-## Technologies Used
+# Repository Structure
+
+```text
+Network-Intrusion-Detection-System
+│
+├── Server/
+│   ├── main.py
+│   ├── Routes/
+│   │   ├── sniff.py
+│   │   ├── Simulate.py
+│   │   ├── dataset.py
+│   │   └── userAttack.py
+│   │
+│   ├── models/
+│   │   ├── random_forest_model.sav
+│   │   └── Linear_SVM_model.sav
+│   │
+│   ├── datasets/
+│   └── testing/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+# Technologies Used
+
+## Backend
 
 * Python
+* FastAPI
+* Scapy
 * Pandas
 * NumPy
 * Scikit-Learn
-* Matplotlib
-* Seaborn
-* Jupyter Notebook
+* Pydantic
 
----
+## Database
 
-## Machine Learning Workflow
+* MongoDB
 
-### 1. Data Collection
+## Frontend
 
-Network traffic data is collected from intrusion detection datasets such as:
+* React
+* Vite
+* JavaScript
 
-* NSL-KDD
-* KDD Cup 99
-* CICIDS
-* UNSW-NB15
-
-### 2. Data Preprocessing
-
-* Handling missing values
-* Encoding categorical features
-* Feature scaling
-* Data cleaning
-
-### 3. Feature Engineering
-
-* Selection of important network traffic features
-* Dimensionality reduction (if required)
-
-### 4. Model Training
-
-Common algorithms used:
+## Machine Learning
 
 * Random Forest
-* Decision Tree
-* Support Vector Machine (SVM)
-* K-Nearest Neighbors (KNN)
-* Logistic Regression
-* XGBoost
-
-### 5. Evaluation
-
-Performance metrics:
-
-* Accuracy
-* Precision
-* Recall
-* F1-Score
-* Confusion Matrix
-* ROC-AUC Score
+* Linear SVM
 
 ---
 
-## Installation
+# Installation
 
-### Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/sreeshanth-t999/Network-Intrusion-Detection-System.git
-```
-
-### Navigate to Project Directory
-
-```bash
 cd Network-Intrusion-Detection-System
 ```
 
-### Install Dependencies
+---
+
+# Backend Setup
+
+Navigate to Server directory:
+
+```bash
+cd Server
+```
+
+Create virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate environment:
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux / Mac
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -123,109 +179,253 @@ pip install -r requirements.txt
 
 ---
 
-## Usage
+# MongoDB Setup
 
-### Train Model
-
-```bash
-python train.py
-```
-
-### Run Detection
+Start MongoDB locally:
 
 ```bash
-python main.py
+mongod
 ```
 
-### Evaluate Model
-
-```bash
-python evaluate.py
-```
-
----
-
-## Example Output
+Default connection:
 
 ```text
-Connection Status: Malicious
+mongodb://localhost:27017
+```
 
-Attack Type: DoS
+Database:
 
-Confidence Score: 97.8%
+```text
+network_intrusion
+```
+
+Collections:
+
+```text
+network_activity
+dos_activity
+prob_activity
+u2r_activity
+r2l_activity
+normal_activity
 ```
 
 ---
 
-## Results
+# Running Backend
 
-| Metric    | Score |
-| --------- | ----- |
-| Accuracy  | XX%   |
-| Precision | XX%   |
-| Recall    | XX%   |
-| F1 Score  | XX%   |
+Start FastAPI server:
 
-> Replace the values above with actual model results obtained during testing.
-
----
-
-## Future Enhancements
-
-* Real-time packet capture
-* Deep Learning models (LSTM, CNN)
-* Hybrid intrusion detection approach
-* Web dashboard for monitoring
-* Integration with SIEM tools
-* Explainable AI (XAI) for attack interpretation
-
----
-
-## Learning Outcomes
-
-This project demonstrates:
-
-* Cybersecurity fundamentals
-* Network traffic analysis
-* Machine Learning workflow
-* Threat detection methodologies
-* Data preprocessing and model evaluation
-
----
-
-## Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a new branch
-3. Commit your changes
-4. Push the branch
-5. Open a Pull Request
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-## Author
-
-**Sreeshanth T**
-
-GitHub: https://github.com/sreeshanth-t999
-
----
-
-## References
-
-* Network Intrusion Detection Systems (NIDS)
-* NSL-KDD Dataset
-* CICIDS Dataset
-* Scikit-Learn Documentation
-* Python Documentation
-
+```bash
+uvicorn main:app --reload
 ```
+
+Backend URL:
+
+```text
+http://127.0.0.1:8000
 ```
+
+Swagger Documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Frontend Setup
+
+Navigate to frontend folder:
+
+```bash
+cd frontend
+```
+
+Install packages:
+
+```bash
+npm install
+```
+
+Run application:
+
+```bash
+npm run dev
+```
+
+Frontend URL:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# API Endpoints
+
+## Dashboard Data
+
+```http
+GET /dashboard
+```
+
+Returns attack statistics grouped by day.
+
+---
+
+## Network Activities
+
+```http
+GET /activities
+```
+
+Returns stored network activity logs.
+
+---
+
+## Dataset Information
+
+```http
+GET /dataset
+```
+
+Returns filtered dataset records.
+
+---
+
+## System Performance
+
+```http
+GET /system-performance
+```
+
+Returns:
+
+* CPU Usage
+* Memory Usage
+* Network Statistics
+
+---
+
+## Attack Simulation
+
+```http
+POST /simulate
+```
+
+Example:
+
+```json
+{
+  "type": "dos"
+}
+```
+
+Supported types:
+
+```text
+normal
+dos
+probe
+r2l
+u2r
+```
+
+---
+
+## Custom Attack Prediction
+
+```http
+POST /attackSimulate
+```
+
+Example:
+
+```json
+{
+  "duration": 10,
+  "protocol_type": "tcp",
+  "services": "http",
+  "flag": "SF",
+  "src_byte": 500,
+  "dstn_byte": 200,
+  "logged_in": 1,
+  "wrong_frag": 0,
+  "same_dest_count": 5,
+  "same_port_count": 3
+}
+```
+
+---
+
+# Machine Learning Pipeline
+
+### Data Processing
+
+* Protocol Encoding
+* Service Encoding
+* Flag Encoding
+* Feature Vector Generation
+* Feature Padding to 122 Dimensions
+
+### Prediction
+
+Two models perform classification:
+
+1. Random Forest
+2. Linear SVM
+
+Both models provide:
+
+* Predicted Attack Type
+* Probability Scores
+* Confidence Levels
+
+---
+
+# Real-Time Packet Sniffing
+
+The packet sniffer:
+
+* Captures TCP, UDP, and ICMP traffic.
+* Extracts connection features.
+* Tracks:
+
+  * Duration
+  * Source Bytes
+  * Destination Bytes
+  * Login Status
+  * Fragment Errors
+  * Destination Counts
+  * Port Counts
+
+Traffic is automatically classified and stored in MongoDB.
+
+---
+
+# Future Improvements
+
+* Deep Learning Models (LSTM/CNN)
+* Threat Severity Scoring
+* Email/SMS Alerts
+* Docker Deployment
+* Role-Based Authentication
+* Cloud Deployment
+* SIEM Integration
+* Real-Time Attack Notifications
+
+---
+
+# Author
+
+### Sreeshanth T
+
+GitHub:
+https://github.com/sreeshanth-t999
+
+---
+
+# License
+
+This project is intended for educational and research purposes.
